@@ -1,14 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>James Stevenson</title>
+<title>Machine learning pre-launch checklist</title>
 <meta charset="UTF-8">
-<style>
-</style>
 </head>
-<body style="">
-Hello, github!
-<script>
-</script>
+<body style="white-space:pre-wrap; margin:2em; padding:2em; background:#EEE; border:1px solid black;"><h1>Machine learning pre-launch checklist</h1>
+If this hasn’t happened to you yet, you’re wiser than I will ever be: I launch a big training run, and come back hours, days, or even weeks later to find useless results. What could I have done?
+
+This is a list of questions to answer right before firing off your machine learning algorithm. Think of it as a pre-launch checklist. The executive summary is, "What do I know about this problem that the algorithm doesn't know?" But it helps to have some suggestions.
+
+<ol><li><b>What are the bounds on “reasonable” inputs?</b>
+
+You probably have an idea of what reasonable data is - and your training set may already have violated it.
+
+For example, check for datapoints with features that are very similar, but with labels that are very different. 
+
+To state the obvious, the optimizer will not be able to tell that these datapoints are mistakes. If they're really wild, it will think they're the most important part. And it will steamroll the rest of the training while trying to fit the impossible. 
+
+</li><li><b>What are the bounds on “reasonable” outputs?</b>
+
+There are always some kind of bounds on the outputs. If you’re like me, you may only think of these bounds once you read your outputs and begin to curse fate.
+
+So, try to imagine that moment now, and add some bounds. Simplest way is to rewind or just kill the optimizer once they're exceeded.
+
+</li><li><b>How sensitive should the results be to small changes in the inputs?</b>
+
+Usually the answer is “not very sensitive”.
+
+This is closely related to “model capacity”: you don’t want your model to be capable of far higher variability than the real thing being modeled.
+
+Check your regularization, and estimate the maximum sensitivity of your model, given your “reasonable” assumptions about your dataset (which you confirmed in steps 1 and 2).
+
+Consider data augmentation with pseudo-data, based on your existing data, with identical labels but slight variation in features. Even if regularization fails, this will tell the optimizer not to take small differences too seriously.
+
+</li><li><b>What is missing from the training set?</b>
+
+Think about all plausible inputs. The world is broad and wide! Compare that to your training set.
+
+If (when) you only have partial coverage, consider data augmentation with some dummy points which at least don’t violate your common sense. Make sure they don’t conflict with the real data. They may not be right, but they’re less wrong than what your optimizer would come up with, since it has no common sense at all. 
+
+</li><li><b>Is there some data that’s less important?</b>
+
+For example, data that’s less likely to appear in practice.
+
+Or, all that dummy data I’ve been telling you to add!
+
+Consider downweighting those datapoints in your loss function, in proportion to their lack of importance.
+
+</li><li><b>Do I know there's not already a solution to this online?</b>
+
+For example, searching just the name of this checklist, I find:
+<a href="https://machinelearningmastery.com/machine-learning-checklist/">machinelearningmastery.com/machine-learning-checklist</a>
+<a href="https://medium.com/@subhojit20_27731/ml-project-checklist-document-for-my-own-reference-feel-free-to-use-it-if-you-want-reference-408b4b6a8fb9">medium.com/@subhojit20_27731/ml-project-checklist</a>
+
+Filled with good advice! These lists not quite last-minute checklists; more full walkthroughs of how to solve a problem. For people like me, who start building immediately and starting thinking later, a last-minute checklist is more apt. But even I sometimes check the first page of search results, and it mostly turns out to be a good thing. The internet has a lot of smart people, and they've been doing this for a while.
+<i>What has been will be again,
+what has been done will be done again;
+there is nothing new under the sun.</i>
+--Ecclesiastes, c. 450-200 BCE
+</li></ol>
+All items checked? Great. Go make that machine learn!
 </body>
 </html>
