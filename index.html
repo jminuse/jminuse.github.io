@@ -3,13 +3,18 @@
 <head>
 <title>Machine learning pre-launch checklist</title>
 <meta charset="UTF-8">
+<style>
+input[type=checkbox] {
+	font-size:1em;
+}
+</style>
 </head>
 <body style="white-space:pre-wrap; margin:2em; padding:2em; background:#EEE; border:1px solid black;"><h1>Machine learning pre-launch checklist</h1>
-If this hasn’t happened to you yet, you’re wiser than I will ever be: I launch a big training run, and come back hours, days, or even weeks later to find useless results. What could I have done?
+If this hasn't happened to you yet, you're wiser than I will ever be: I launch a big training run, and come back hours, days, or even weeks later to find useless results. What could I have done?
 
 This is a list of questions to answer right before firing off your machine learning algorithm. Think of it as a pre-launch checklist. The executive summary is, "What do I know about this problem that the algorithm doesn't know?" But it helps to have some suggestions.
 
-<ol><li><b>What are the bounds on “reasonable” inputs?</b>
+<ol><li><b><input type="checkbox">Set bounds on "reasonable" inputs</b>
 
 You probably have an idea of what reasonable data is - and your training set may already have violated it.
 
@@ -17,37 +22,35 @@ For example, check for datapoints with features that are very similar, but with 
 
 To state the obvious, the optimizer will not be able to tell that these datapoints are mistakes. If they're really wild, it will think they're the most important part. And it will steamroll the rest of the training while trying to fit the impossible. 
 
-</li><li><b>What are the bounds on “reasonable” outputs?</b>
+</li><li><b><input type="checkbox">Set bounds on "reasonable" outputs</b>
 
-There are always some kind of bounds on the outputs. If you’re like me, you may only think of these bounds once you read your outputs and begin to curse fate.
+There are always some kind of bounds on the outputs. If you're like me, you may only think of these bounds once you read your outputs and begin to curse fate.
 
 So, try to imagine that moment now, and add some bounds. Simplest way is to rewind or just kill the optimizer once they're exceeded.
 
-</li><li><b>How sensitive should the results be to small changes in the inputs?</b>
+</li><li><b><input type="checkbox">Limit sensitivity to small changes in input</b>
 
-Usually the answer is “not very sensitive”.
+Few real things you want to model are highly sensitive to small changes in input.
 
-This is closely related to “model capacity”: you don’t want your model to be capable of far higher variability than the real thing being modeled.
+Sensitivity is closely related to "model capacity": you don't want your model to be capable of far higher variability than the real thing being modeled.
 
-Check your regularization, and estimate the maximum sensitivity of your model, given your “reasonable” assumptions about your dataset (which you confirmed in steps 1 and 2).
+Check your regularization, and estimate the maximum sensitivity of your model, given your "reasonable" assumptions about your dataset (which you confirmed in steps 1 and 2).
 
 Consider data augmentation with pseudo-data, based on your existing data, with identical labels but slight variation in features. Even if regularization fails, this will tell the optimizer not to take small differences too seriously.
 
-</li><li><b>What is missing from the training set?</b>
+</li><li><b><input type="checkbox">Check what's missing from the training set</b>
 
-Think about all plausible inputs. The world is broad and wide! Compare that to your training set.
+Think about all plausible inputs. The world is broad and wide! Compare that to your training set, which probably isn't.
 
-If (when) you only have partial coverage, consider data augmentation with some dummy points which at least don’t violate your common sense. Make sure they don’t conflict with the real data. They may not be right, but they’re less wrong than what your optimizer would come up with, since it has no common sense at all. 
+If (when) you only have partial coverage, consider data augmentation with some dummy points which at least don't violate your common sense. Make sure they don't conflict with the real data. They may not be right, but they're less wrong than what your optimizer would come up with, since it has no common sense at all. 
 
-</li><li><b>Is there some data that’s less important?</b>
+</li><li><b><input type="checkbox">Estimate relative importance of the datapoints</b>
 
-For example, data that’s less likely to appear in practice.
+Some data is less likely to appear in practice. Some has high uncertainty. Some is that dummy data I've been telling you to add, which has REALLY high uncertainty because you made it up.
 
-Or, all that dummy data I’ve been telling you to add!
+These points are useful, but they have the power to distort your results if taken too seriously - and the optimizer will absolutely take them seriously. You have to tell it not to do that. Downweight them in your loss function, with some weight between 0.001 and 1.0 that of the trusted points.
 
-Consider downweighting those datapoints in your loss function, in proportion to their lack of importance.
-
-</li><li><b>Do I know there's not already a solution to this online?</b>
+</li><li><b><input type="checkbox">Try a quick internet search...</b>
 
 For example, searching just the name of this checklist, I find:
 <a href="https://machinelearningmastery.com/machine-learning-checklist/">machinelearningmastery.com/machine-learning-checklist</a>
